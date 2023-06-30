@@ -1,104 +1,89 @@
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Поехали!");
         TaskManager taskManager = new TaskManager();
 
-        Epic epic_1 = new Epic("Глобальная задача_1",
-                "Тест трекера задач через Epic",
-                "NEW",
-                taskManager.generateId());
+        Task task_1 = new Task("Задача №1", "Это описание задачи №1");
+        Task task_2 = new Task("Задача №2", "Это описание задачи №2");
 
-        Subtask subtask_1 = new Subtask("Подзадача_1",
-                "Тест трекера задач через Subtask",
-                "NEW",
-                taskManager.generateId(),
-                epic_1.taskId);
+        taskManager.createTask(task_1);
+        taskManager.createTask(task_2);
 
-        Subtask subtask_2 = new Subtask("Подзадача_2",
-                "Тест трекера задач через Subtask",
-                "NEW",
-                taskManager.generateId(),
-                epic_1.taskId);
+        System.out.println(taskManager.getTaskById(task_1.getTaskId()));
+        System.out.println(taskManager.getTaskById(task_2.getTaskId()));
+        System.out.println(taskManager.getAllTasks());
+        System.out.println();
 
-        Epic epic_2 = new Epic("Глобальная задача_2",
-                "Тест трекера задач через Epic",
-                "NEW",
-                taskManager.generateId());
-
-        Subtask subtask_2_1 = new Subtask("Подзадача_2_1",
-                "Тест трекера задач через Subtask",
-                "NEW",
-                taskManager.generateId(),
-                epic_2.taskId);
-
-        Task task_1 = new Task("Просто задача_1",
-                "Тест трекера задач через Task",
-                "NEW",
-                taskManager.generateId());
-
-        Task task_2 = new Task("Просто задача_2",
-                "Тест трекера задач через Task",
-                "NEW",
-                taskManager.generateId());
+        Epic epic_1 = new Epic("Эпик_1", "Здесь описание для эпика_1");
+        Epic epic_2 = new Epic("Эпик_2", "Здесь описание для эпика_2");
 
         taskManager.createEpic(epic_1);
         taskManager.createEpic(epic_2);
-        taskManager.createTask(task_1);
-        taskManager.createTask(task_2);
-        taskManager.createSubtask(subtask_1);
-        taskManager.createSubtask(subtask_2);
+
+        System.out.println(taskManager.getEpic(epic_1.getTaskId()));
+        System.out.println(taskManager.getEpic(epic_2.getTaskId()));
+        System.out.println(taskManager.getAllEpics());
+        System.out.println();
+
+        Subtask subtask_1_1 = new Subtask("Подзадача_1_1",
+                "Здесь напишем, что хотим в подзадаче_1_1", "NEW",
+                 epic_1.getTaskId());
+        Subtask subtask_1_2 = new Subtask("Подзадача_1_2",
+                "Здесь напишем, что хотим в подзадаче_1_2", "NEW",
+                epic_1.getTaskId());
+        Subtask subtask_2_1 = new Subtask("Подзадача_2_1",
+                "Здесь напишем, что хотим в подзадаче_2_1", "NEW",
+             epic_2.getTaskId());
+
+        taskManager.createSubtask(subtask_1_1);
+        taskManager.createSubtask(subtask_1_2);
         taskManager.createSubtask(subtask_2_1);
 
-        for (Epic epic : taskManager.getAllEpics()) {
-            System.out.println(epic);
-        }
-        for (Subtask subtask : taskManager.getAllSubtasks()) {
-            System.out.println(subtask);
-        }
-        for (Task task : taskManager.getAllTasks()) {
-            System.out.println(task);
-        }
+        System.out.println(taskManager.getSubtask(subtask_1_1.getTaskId()));
+        System.out.println(taskManager.getSubtask(subtask_1_2.getTaskId()));
+        System.out.println(taskManager.getSubtask(subtask_2_1.getTaskId()));
+        System.out.println(taskManager.getAllSubtasks());
         System.out.println();
 
-        subtask_2_1 = new Subtask("Подзадача_2_1",
-                "Меняем описание, смотрим результат",
-                "DONE",
-                subtask_2_1.taskId,
-                epic_2.taskId);
+        Task updateTask_1 = taskManager.getTaskById(task_1.getTaskId());
+        updateTask_1.setTaskStatus("IN PROGRESS");
+        taskManager.updateTask(updateTask_1);
 
-
-        taskManager.updateEpic(epic_1);
-        taskManager.updateEpic(epic_2);
-        taskManager.updateTask(task_1);
-        taskManager.updateTask(task_2);
-        taskManager.updateSubtask(subtask_1);
-        taskManager.updateSubtask(subtask_2);
-        taskManager.updateSubtask(subtask_2_1);
-
-        for (Epic epic : taskManager.getAllEpics()) {
-            System.out.println(epic);
-        }
-        for (Subtask subtask : taskManager.getAllSubtasks()) {
-            System.out.println(subtask);
-        }
-        for (Task task : taskManager.getAllTasks()) {
-            System.out.println(task);
-        }
+        System.out.println(taskManager.getTaskById(updateTask_1.getTaskId()));
+        System.out.println(taskManager.getAllTasks());
         System.out.println();
 
-        taskManager.dellEpic(epic_1.taskId);
-        taskManager.dellTask(task_2.taskId);
+        Epic updateEpic_1 = taskManager.getEpic(epic_1.getTaskId());
+        updateEpic_1.setTaskStatus("IN PROGRESS");
+        taskManager.updateEpic(updateEpic_1);
+
+        System.out.println(taskManager.getEpic(epic_2.getTaskId()));
+        System.out.println(taskManager.getAllEpics());
+        System.out.println();
+
+        Subtask updateSubtask_1_1 = taskManager.getSubtask(subtask_1_1.getTaskId());
+        updateSubtask_1_1.setTaskStatus("DONE");
+        taskManager.updateSubtask(updateSubtask_1_1);
+
+        Subtask updateSubtask_1_2 = taskManager.getSubtask(subtask_1_2.getTaskId());
+        updateSubtask_1_2.setTaskStatus("IN PROGRESS");
+        taskManager.updateSubtask(updateSubtask_1_2);
+
+        System.out.println(taskManager.getSubtask(updateSubtask_1_1.getTaskId()));
+        System.out.println(taskManager.getSubtask(updateSubtask_1_2.getTaskId()));
+        System.out.println(taskManager.getAllSubtasks());
+        System.out.println();
+
+        taskManager.dellTask(task_2.getTaskId());
+        System.out.println(taskManager.getTaskById(task_2.getTaskId()));
+        System.out.println(taskManager.getAllTasks());
+        System.out.println();
+
+        taskManager.dellEpic(epic_2.getTaskId());
+        System.out.println(taskManager.getTaskById(epic_2.getTaskId()));
+        System.out.println(taskManager.getAllEpics());
+        System.out.println();
 
 
-        for (Epic epic : taskManager.getAllEpics()) {
-            System.out.println(epic);
-        }
-        for (Subtask subtask : taskManager.getAllSubtasks()) {
-            System.out.println(subtask);
-        }
-        for (Task task : taskManager.getAllTasks()) {
-            System.out.println(task);
-        }
     }
 }
