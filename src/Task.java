@@ -3,12 +3,12 @@ public class Task {
     private String taskName;
     private String taskDescription;
     private int taskId;
-    private String taskStatus;
+    private TaskStatus taskStatus;
 
     public Task(String taskName, String taskDescription) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
-        this.taskStatus = "NEW";
+        this.taskStatus = TaskStatus.NEW;
     }
 
     public String getTaskName() {
@@ -36,11 +36,11 @@ public class Task {
         return taskId;
     }
 
-    public String getTaskStatus() {
+    public TaskStatus getTaskStatus() {
         return taskStatus;
     }
 
-    public void setTaskStatus(String taskStatus) {
+    public void setTaskStatus(TaskStatus taskStatus) {
         this.taskStatus = taskStatus;
     }
 
