@@ -1,29 +1,34 @@
+package manager;
+import model.Task;
+import model.Epic;
+import model.Subtask;
+
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
 
-    void createTask(Task task);
+    void createTask(model.Task task);
     Task getTask(int taskId);
-    ArrayList<Task> getAllTasks();
+    List<Task> getAllTasks();
     void updateTask(Task task);
     void dellTask(int taskId);
     void dellAllTasks();
 
     void createEpic(Epic epic);
     Epic getEpic(int epicId);
-    ArrayList<Epic> getAllEpics();
+    List<Epic> getAllEpics();
     void updateEpic(Epic epic);
     void dellEpic(int epicId);
     void dellAllEpics();
 
     void createSubtask(@NotNull Subtask subtask);
     Subtask getSubtask(int subtaskId);
-    ArrayList<Subtask> getAllSubtasks();
+    List<Subtask> getAllSubtasks();
     void updateSubtask(Subtask subtask);
     void dellSubtask(int subtaskId);
     void dellAllSubtasks();
 
-    ArrayList<Task> getHistory();
+    List<Task> getHistory();
 }
