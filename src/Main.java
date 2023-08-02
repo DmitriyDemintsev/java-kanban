@@ -42,17 +42,17 @@ public class Main {
         Subtask subtask_1_2 = new Subtask("Подзадача_1_2",
                 "Здесь напишем, что хотим в подзадаче_1_2",
                 epic_1.getTaskId());
-        Subtask subtask_2_1 = new Subtask("Подзадача_2_1",
-                "Здесь напишем, что хотим в подзадаче_2_1",
-             epic_2.getTaskId());
+        Subtask subtask_1_3 = new Subtask("Подзадача_1_3",
+                "Здесь напишем, что хотим в подзадаче_1_3",
+             epic_1.getTaskId());
 
         taskManager.createSubtask(subtask_1_1);
         taskManager.createSubtask(subtask_1_2);
-        taskManager.createSubtask(subtask_2_1);
+        taskManager.createSubtask(subtask_1_3);
 
         System.out.println(taskManager.getSubtask(subtask_1_1.getTaskId()));
         System.out.println(taskManager.getSubtask(subtask_1_2.getTaskId()));
-        System.out.println(taskManager.getSubtask(subtask_2_1.getTaskId()));
+        System.out.println(taskManager.getSubtask(subtask_1_3.getTaskId()));
         System.out.println(taskManager.getAllSubtasks());
         System.out.println(taskManager.getHistory());
         System.out.println();
@@ -70,7 +70,7 @@ public class Main {
         updateEpic_1.setTaskStatus(TaskStatus.IN_PROGRESS);
         taskManager.updateEpic(updateEpic_1);
 
-        System.out.println(taskManager.getEpic(epic_2.getTaskId()));
+        System.out.println(taskManager.getEpic(epic_1.getTaskId()));
         System.out.println(taskManager.getAllEpics());
         System.out.println(taskManager.getHistory());
         System.out.println();
@@ -95,12 +95,15 @@ public class Main {
         System.out.println(taskManager.getHistory());
         System.out.println();
 
+        taskManager.dellAllTasks();
+        System.out.println(taskManager.getAllTasks());
+        System.out.println(taskManager.getHistory());
+        System.out.println();
+
         taskManager.dellEpic(epic_2.getTaskId());
         System.out.println(taskManager.getTask(epic_2.getTaskId()));
         System.out.println(taskManager.getAllEpics());
         System.out.println(taskManager.getHistory());
         System.out.println();
-
-
     }
 }

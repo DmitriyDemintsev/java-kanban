@@ -1,9 +1,11 @@
 package manager;
+
 import model.Task;
 import model.Epic;
 import model.Subtask;
 import model.TaskStatus;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -54,14 +56,16 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void dellTask(int taskId) {
         taskStorage.remove(taskId);
+        historyManager.remove(taskId);
     }
 
     @Override
     public void dellAllTasks() {
+        for (int taskId : taskStorage.keySet()) {
+            historyManager.remove(taskId);
+        }
         taskStorage.clear();
     }
-
-
 
     @Override
     public void createEpic(Epic epic) {
@@ -92,11 +96,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void dellEpic(int epicId) {
+        historyManager.remove(epicId);
         Epic epic = getEpic(epicId);
         if (epic == null) {
             return;
         }
         for (int subtaskId : epic.getSubtaskIds()) {
+            dellSubtask(subtaskId);
             subtaskStorage.remove(subtaskId);
         }
         epicStorage.remove(epicId);
@@ -104,6 +110,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void dellAllEpics() {
+        for (int epicId : epicStorage.keySet()) {
+            historyManager.remove(epicId);
+        }
         dellAllSubtasks();
         epicStorage.clear();
     }
@@ -142,8 +151,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void dellSubtask(int subtaskId) {
+        historyManager.remove(subtaskId);
         Subtask subtask = getSubtask(subtaskId);
-        if(subtask == null) {
+        if (subtask == null) {
             return;
         }
         subtaskStorage.remove(subtaskId);
@@ -154,6 +164,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void dellAllSubtasks() {
+        for (int subtaskId : subtaskStorage.keySet()) {
+            historyManager.remove(subtaskId);
+        }
         subtaskStorage.clear();
         for (Epic epic : epicStorage.values()) {
             epic.getSubtaskIds().clear();
