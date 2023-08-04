@@ -33,10 +33,9 @@ public class InMemoryTaskManager implements TaskManager {
     public Task getTask(int taskId) {
         if (!taskStorage.containsKey(taskId)) {
             return null;
-        } else {
-            historyManager.add(taskStorage.get(taskId));
-            return taskStorage.get(taskId);
         }
+        historyManager.add(taskStorage.get(taskId));
+        return taskStorage.get(taskId);
     }
 
     @Override
@@ -96,36 +95,41 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void dellEpic(int epicId) {
-        historyManager.remove(epicId);
         Epic epic = getEpic(epicId);
+        //historyManager.remove(epicId);
         if (epic == null) {
             return;
         }
         for (int subtaskId : epic.getSubtaskIds()) {
             dellSubtask(subtaskId);
-            subtaskStorage.remove(subtaskId);
         }
         epicStorage.remove(epicId);
+        historyManager.remove(epicId);
     }
 
     @Override
     public void dellAllEpics() {
+        /*for (int epicId : epicStorage.keySet()) {
+            historyManager.remove(epicId);
+        }*/
+        dellAllSubtasks();
         for (int epicId : epicStorage.keySet()) {
             historyManager.remove(epicId);
         }
-        dellAllSubtasks();
         epicStorage.clear();
     }
 
     @Override
     public void createSubtask(@NotNull Subtask subtask) {
         subtask.setTaskId(generateId());
-        subtaskStorage.put(subtask.getTaskId(), subtask);
-        if (!epicStorage.containsKey(subtask.getTaskId())) {
+        //subtaskStorage.put(subtask.getTaskId(), subtask);
+        if (!epicStorage.containsKey(subtask.getEpicId())) {
             return;
         }
+        subtaskStorage.put(subtask.getTaskId(), subtask);
+
         Epic epic = getEpic(subtask.getEpicId());
-        epic.getSubtaskIds().add(subtask.getTaskId());
+        epic.addSubtaskId(subtask);
         updateEpicStatus(subtask.getEpicId());
     }
 
@@ -151,27 +155,32 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void dellSubtask(int subtaskId) {
-        historyManager.remove(subtaskId);
         Subtask subtask = getSubtask(subtaskId);
+        //historyManager.remove(subtaskId);
         if (subtask == null) {
             return;
         }
-        subtaskStorage.remove(subtaskId);
         Epic epic = getEpic(subtask.getEpicId());
-        epic.getSubtaskIds().remove(subtaskId);
-        updateEpicStatus(subtaskId);
+        epic.deleteSubtaskId(subtaskId);
+        updateEpicStatus(subtask.getEpicId());
+        historyManager.remove(subtaskId);
+        subtaskStorage.remove(subtaskId);
     }
 
     @Override
     public void dellAllSubtasks() {
-        for (int subtaskId : subtaskStorage.keySet()) {
+        /*for (int subtaskId : subtaskStorage.keySet()) {
             historyManager.remove(subtaskId);
         }
-        subtaskStorage.clear();
+        subtaskStorage.clear();*/
         for (Epic epic : epicStorage.values()) {
             epic.getSubtaskIds().clear();
             updateEpicStatus(epic.getTaskId());
         }
+        for (int subtaskId : subtaskStorage.keySet()) {
+            historyManager.remove(subtaskId);
+        }
+        subtaskStorage.clear();
     }
 
     @Override
