@@ -12,10 +12,10 @@ import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private final HashMap<Integer, Task> taskStorage = new HashMap<>();
-    private final HashMap<Integer, Epic> epicStorage = new HashMap<>();
-    private final HashMap<Integer, Subtask> subtaskStorage = new HashMap<>();
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
+    protected final HashMap<Integer, Task> taskStorage = new HashMap<>();
+    protected final HashMap<Integer, Epic> epicStorage = new HashMap<>();
+    protected final HashMap<Integer, Subtask> subtaskStorage = new HashMap<>();
+    protected final HistoryManager historyManager = Managers.getDefaultHistory();
 
     private int idGenerator = 0;
 
@@ -96,7 +96,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void dellEpic(int epicId) {
         Epic epic = getEpic(epicId);
-        //historyManager.remove(epicId);
         if (epic == null) {
             return;
         }
@@ -109,9 +108,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void dellAllEpics() {
-        /*for (int epicId : epicStorage.keySet()) {
-            historyManager.remove(epicId);
-        }*/
         dellAllSubtasks();
         for (int epicId : epicStorage.keySet()) {
             historyManager.remove(epicId);
@@ -122,7 +118,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void createSubtask(@NotNull Subtask subtask) {
         subtask.setTaskId(generateId());
-        //subtaskStorage.put(subtask.getTaskId(), subtask);
         if (!epicStorage.containsKey(subtask.getEpicId())) {
             return;
         }
@@ -156,7 +151,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void dellSubtask(int subtaskId) {
         Subtask subtask = getSubtask(subtaskId);
-        //historyManager.remove(subtaskId);
         if (subtask == null) {
             return;
         }
@@ -169,10 +163,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void dellAllSubtasks() {
-        /*for (int subtaskId : subtaskStorage.keySet()) {
-            historyManager.remove(subtaskId);
-        }
-        subtaskStorage.clear();*/
         for (Epic epic : epicStorage.values()) {
             epic.getSubtaskIds().clear();
             updateEpicStatus(epic.getTaskId());

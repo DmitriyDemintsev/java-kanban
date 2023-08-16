@@ -1,16 +1,20 @@
 package model;
 
-public class Task {
+import java.util.ArrayList;
+
+public class Task extends ArrayList<Task> {
 
     private String taskName;
     private String taskDescription;
     private int taskId;
     private TaskStatus taskStatus;
+    protected TaskType type;
 
     public Task(String taskName, String taskDescription) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskStatus = TaskStatus.NEW;
+        this.type = TaskType.TASK;
     }
 
     public String getTaskName() {
@@ -40,6 +44,10 @@ public class Task {
 
     public TaskStatus getTaskStatus() {
         return taskStatus;
+    }
+
+    public TaskType getTaskType() {
+        return type;
     }
 
     public void setTaskStatus(TaskStatus taskStatus) {
