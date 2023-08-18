@@ -23,19 +23,20 @@ public class CSVFormatHandler {
 
     Task fromString(String value) {
         String[] parts = value.split(",");
-        if(parts[1].toUpperCase().equals(TaskType.TASK.name())) {
+        TaskType type = TaskType.valueOf(parts[1].toUpperCase());
+        if(type == TaskType.TASK) {
             Task task = new Task(parts[2], parts[4]);
             task.setTaskId(Integer.valueOf(parts[0]));
             task.setTaskStatus(TaskStatus.valueOf(parts[3].toUpperCase()));
             return task;
         }
-        if(parts[1].toUpperCase().equals(TaskType.EPIC.name())) {
+        if(type == TaskType.EPIC) {
             Epic epic = new Epic(parts[2], parts[4]);
             epic.setTaskId(Integer.valueOf(parts[0]));
             epic.setTaskStatus(TaskStatus.valueOf(parts[3].toUpperCase()));
             return epic;
         }
-        if(parts[1].toUpperCase().equals(TaskType.SUBTASK.name())) {
+        if(type == TaskType.SUBTASK) {
             Subtask subtask = new Subtask(parts[2], parts[4], Integer.valueOf(parts[5]));
             subtask.setTaskId(Integer.valueOf(parts[0]));
             subtask.setTaskStatus(TaskStatus.valueOf(parts[3].toUpperCase()));
