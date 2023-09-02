@@ -2,7 +2,10 @@ package manager;
 
 import model.Task;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
     final Map<Integer, Node> taskMap = new HashMap<>();
@@ -18,20 +21,20 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public List<Task> getHistory() {
-        return getTasks();
-    }
-
-    @Override
     public void add(Task task) {
-        if (taskMap.containsKey(task.getTaskId())) {
-            removeNode(taskMap.get(task.getTaskId()));
+        if (taskMap.containsKey(task.getId())) {
+            removeNode(taskMap.get(task.getId()));
         }
 
         Node node = new Node(task);
         linkLast(node);
 
-        taskMap.put(task.getTaskId(), node);
+        taskMap.put(task.getId(), node);
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return getTasks();
     }
 
     private List<Task> getTasks() {
@@ -44,7 +47,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         return result;
     }
-
 
     private void removeNode(Node node) {
         if (node == head && node == tail) {

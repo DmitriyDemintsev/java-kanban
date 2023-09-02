@@ -1,8 +1,15 @@
 package manager;
 
-import model.*;
+import manager.exception.ManagerSaveException;
+import model.Epic;
+import model.Subtask;
+import model.Task;
+import model.TaskType;
 import org.jetbrains.annotations.NotNull;
-import java.io.*;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -44,7 +51,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    static FileBackedTasksManager loadFromFile(String fileName) throws IOException {
+    public static FileBackedTasksManager loadFromFile(String fileName) {
         FileBackedTasksManager manager = new FileBackedTasksManager(fileName);
 
         try {
@@ -59,25 +66,28 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     break;
                 }
                 Task task = handler.fromString(lines.get(i));
-                idToTask.put(task.getTaskId(), task);
+                idToTask.put(task.getId(), task);
                 if (task.getTaskType() == TaskType.TASK) {
-                    manager.taskStorage.put(task.getTaskId(), task);
+                    manager.taskStorage.put(task.getId(), task);
                 }
                 if (task.getTaskType() == TaskType.EPIC) {
-                    manager.epicStorage.put(task.getTaskId(), (Epic) task);
+                    manager.epicStorage.put(task.getId(), (Epic) task);
                 }
                 if (task.getTaskType() == TaskType.SUBTASK) {
-                    manager.subtaskStorage.put(task.getTaskId(), (Subtask) task);
+                    manager.subtaskStorage.put(task.getId(), (Subtask) task);
                 }
             }
-            for (Subtask subtask: manager.getAllSubtasks()) {
-                manager.getEpic(subtask.getEpicId()).addSubtaskId(subtask);
+            for (Subtask subtask : manager.subtaskStorage.values()) {
+                manager.epicStorage.get(subtask.getEpicId()).addSubtaskId(subtask.getId());
             }
 
-            String historyRow = lines.get(++i);
-            List<Integer> history = handler.historyFromString(historyRow);
-            for (Integer id : history) {
-                manager.historyManager.add(idToTask.get(id));
+            ++i;
+            if (i < lines.size()) {
+                String historyRow = lines.get(i);
+                List<Integer> history = handler.historyFromString(historyRow);
+                for (Integer id : history) {
+                    manager.historyManager.add(idToTask.get(id));
+                }
             }
             return manager;
         } catch (IOException e) {
@@ -157,7 +167,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     @Override
     public void dellAllEpics() {
-        super.dellAllSubtasks();
+        super.dellAllEpics();
         save();
     }
 
@@ -217,17 +227,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         Subtask subtask_1_1 = new Subtask("Подзадача_1_1",
                 "Здесь напишем что хотим в подзадаче_1_1",
-                epic_1.getTaskId());
+                epic_1.getId());
         Subtask subtask_1_3 = new Subtask("Подзадача_1_3",
                 "Здесь напишем что хотим в подзадаче_1_3",
-                epic_1.getTaskId());
+                epic_1.getId());
 
         taskManager.createSubtask(subtask_1_1);
         taskManager.createSubtask(subtask_1_3);
 
-        taskManager.getTask(task_1.getTaskId());
-        taskManager.getEpic(epic_1.getTaskId());
-        taskManager.getSubtask(subtask_1_3.getTaskId());
+        taskManager.getTask(task_1.getId());
+        taskManager.getEpic(epic_1.getId());
+        taskManager.getSubtask(subtask_1_3.getId());
 
         System.out.println(taskManager.getHistory());
 

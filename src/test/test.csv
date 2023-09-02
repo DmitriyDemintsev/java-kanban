@@ -1,0 +1,8 @@
+id,type,name,status,description,startTime,duration,epic
+1,TASK,Task example,NEW,Task description,2023-09-02T12:10:45.941608,10,
+2,EPIC,Epic example,IN_PROGRESS,Epic description,2023-09-02T12:10:50.941608,20,
+5,EPIC,Epic_Empty example,NEW,Epic_Empty description,2023-09-02T12:51:45.941608,30,
+3,SUBTASK,Subtask_1 example,NEW,Subtask_1 description,2023-09-02T12:55:45.941608,40,2
+4,SUBTASK,Subtask_2 example,DONE,Subtask_2 description,2023-09-02T12:56:45.941608,50,2
+
+1,2,3,4,5
