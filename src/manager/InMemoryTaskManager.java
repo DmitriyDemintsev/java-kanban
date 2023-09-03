@@ -27,18 +27,23 @@ public class InMemoryTaskManager implements TaskManager {
         return ++idGenerator;
     }
 
-    private List<Task> getPrioritizedTasks() {
-        List<Task> sotrList = new ArrayList<>(prioritizedTask);
+    @Override
+    public List<Task> getPrioritizedTasks() {
+
         return new ArrayList<>(prioritizedTask);
     }
 
-    private void validate() {
+    private void validate(Task task) {
         List<Task> list = getPrioritizedTasks();
+        //if()
         for (int i = 0; i < list.size() - 1; i++) {
-            if (list.get(i).getEndTime() != null && list.get(i + 1).getStartTime() != null) {
-                if (list.get(i).getEndTime().isAfter(list.get(i + 1).getStartTime())) {
-                    throw new TaskValidationException("Задачи пересекаются");
+            if ((task.getStartTime() != null) && (list.get(i).getStartTime() != null)
+                    && (task.getEndTime() != null) && (list.get(i).getEndTime() != null)) {
+                if (task.getStartTime().isAfter(list.get(i).getEndTime()) ||
+                        task.getEndTime().isBefore(list.get(i).getStartTime())) {
+                    continue;
                 }
+                throw new TaskValidationException("Задачи пересекаются");
             }
         }
     }
@@ -49,7 +54,7 @@ public class InMemoryTaskManager implements TaskManager {
         taskStorage.put(task.getId(), task);
         prioritizedTask.add(task);
         try {
-            validate();
+            validate(task);
         } catch (TaskValidationException e) {
             dellTask(task.getId());
             throw e;
@@ -99,9 +104,9 @@ public class InMemoryTaskManager implements TaskManager {
     public void createEpic(Epic epic) {
         epic.setId(generateId());
         epicStorage.put(epic.getId(), epic);
-        prioritizedTask.add(epic);
+        //prioritizedTask.add(epic);
         try {
-            validate();
+            validate(epic);
         } catch (TaskValidationException e) {
             dellEpic(epic.getId());
             throw e;
@@ -172,7 +177,7 @@ public class InMemoryTaskManager implements TaskManager {
         prioritizedTask.add(subtask);
 
         try {
-            validate();
+            validate(subtask);
         } catch (TaskValidationException e) {
             dellSubtask(subtask.getId());
             throw e;

@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface TaskManager {
 
+    List<Task> getPrioritizedTasks();
+
     void createTask(model.Task task);
     Task getTask(int taskId);
     List<Task> getAllTasks();
