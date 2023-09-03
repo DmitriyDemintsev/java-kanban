@@ -36,7 +36,7 @@ public class InMemoryTaskManager implements TaskManager {
     private void validate(Task task) {
         List<Task> list = getPrioritizedTasks();
         //if()
-        for (int i = 0; i < list.size() - 1; i++) {
+        for (int i = 0; i < list.size(); i++) {
             if ((task.getStartTime() != null) && (list.get(i).getStartTime() != null)
                     && (task.getEndTime() != null) && (list.get(i).getEndTime() != null)) {
                 if (task.getStartTime().isAfter(list.get(i).getEndTime()) ||
