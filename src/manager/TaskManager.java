@@ -33,4 +33,6 @@ public interface TaskManager {
     void dellAllSubtasks();
 
     List<Task> getHistory();
+
+    public List<Subtask> getSubtasks(int epicId);
 }

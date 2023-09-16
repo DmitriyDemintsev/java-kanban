@@ -4,12 +4,18 @@ import model.Epic;
 import model.Subtask;
 import model.Task;
 import model.TaskStatus;
+import server.KVServer;
 
-
+import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        KVServer server = new KVServer();
+                server.start();
+
+
+    //public static void main(String[] args) {
         TaskManager taskManager = Managers.getDefault();
 
         Task task_1 = new Task("Задача №1", "Это описание задачи №1");
@@ -116,5 +122,8 @@ public class Main {
         taskManager.dellSubtask(subtask_1_1.getId());
         System.out.println(taskManager.getAllSubtasks());
         System.out.println(taskManager.getHistory());
+
+        System.out.println();
+        server.stop();
     }
 }

@@ -28,7 +28,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.fileName = fileName;
     }
 
-    private void save() {
+    public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(handler.getHeader());
             for (Task task: taskStorage.values()) {
@@ -69,12 +69,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 idToTask.put(task.getId(), task);
                 if (task.getTaskType() == TaskType.TASK) {
                     manager.taskStorage.put(task.getId(), task);
+                    manager.prioritizedTask.add(task);
                 }
                 if (task.getTaskType() == TaskType.EPIC) {
                     manager.epicStorage.put(task.getId(), (Epic) task);
                 }
                 if (task.getTaskType() == TaskType.SUBTASK) {
                     manager.subtaskStorage.put(task.getId(), (Subtask) task);
+                    manager.prioritizedTask.add(task);
                 }
             }
             for (Subtask subtask : manager.subtaskStorage.values()) {
@@ -87,6 +89,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 List<Integer> history = handler.historyFromString(historyRow);
                 for (Integer id : history) {
                     manager.historyManager.add(idToTask.get(id));
+                }
+            }
+            for (int id: idToTask.keySet()) {
+                if (id > manager.idGenerator) {
+                    manager.idGenerator = id;
                 }
             }
             return manager;
@@ -213,7 +220,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public List<Task> getHistory() {
         return super.getHistory();
     }
-
 
     public static void main(String[] args) throws IOException {
         TaskManager taskManager = new FileBackedTasksManager("fileName.txt");
