@@ -2,6 +2,7 @@ package server;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import manager.exception.KVServerLoadException;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -56,9 +57,7 @@ public class KVServer {
 			}
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			throw e;
+			throw new KVServerLoadException("Произошла ошибка во время получения данных");
 		}
 		finally {
 			h.close();
